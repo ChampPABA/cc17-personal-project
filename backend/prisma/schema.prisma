@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  firstName  String?
+  lastName   String?
+  email      String      @unique
+  password   String
+  isActive   Boolean     @default(true)
+  createdAt  DateTime    @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime?   @updatedAt @db.Timestamp(0)
+  user_roles User_role[]
+  quotations Quotation[]
+
+  @@map("users")
+}
+
+enum RoleName {
+  ADMIN
+  USER
+}
+
+model User_role {
+  id         Int      @id @default(autoincrement())
+  assignedAt DateTime @default(now()) @db.Timestamp(0)
+  userId     Int
+  roleName   RoleName @default(USER)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_roles")
+}
+
+enum StatusName {
+  DRAFTED
+  COMPLETED
+}
+
+model Quotation {
+  id                Int        @id @default(autoincrement())
+  userId            Int
+  customerFirstName String?
+  customerLastName  String?
+  customerMobile    String?
+  customerEmail     String?
+  projectName       String?
+  roomNo            String?
+  roomType          String?
+  roomSize          Decimal?   @db.Decimal(12, 2)
+  roomDiscount      Decimal?   @db.Decimal(12, 2)
+  bookingPayment    Decimal?   @db.Decimal(12, 2)
+  transferPayment   Decimal?   @db.Decimal(12, 2)
+  commonFee         Decimal?   @db.Decimal(12, 2)
+  sinkingFund       Decimal?   @db.Decimal(12, 2)
+  status            StatusName
+  createdAt         DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt         DateTime?  @updatedAt @db.Timestamp(0)
+  deletedAt         DateTime?  @db.Timestamp(0)
+  approveEmail      String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("quotations")
+}
