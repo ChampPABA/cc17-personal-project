@@ -1,0 +1,53 @@
+const bcrypt = require("bcryptjs");
+const prisma = require("../src/models/prisma");
+
+const password = bcrypt.hashSync("!aA123");
+
+const roleData = [{ roleName: "ADMIN" }, { roleName: "USER" }];
+
+const userData = [
+  {
+    firstName: "Baki",
+    lastName: "Hanma",
+    email: "user1@ifcg.co.th",
+    password,
+  },
+  {
+    firstName: "Yujiro",
+    lastName: "Hanma",
+    email: "user2@ifcg.co.th",
+    password,
+  },
+  {
+    firstName: "Jack",
+    lastName: "Hanma",
+    email: "user3@ifcg.co.th",
+    password,
+  },
+];
+
+const userRoleData = [
+  {
+    assignedAt: new Date(),
+    userId: 1,
+    roleId: 1,
+  },
+  {
+    assignedAt: new Date(),
+    userId: 2,
+    roleId: 2,
+  },
+  {
+    assignedAt: new Date(),
+    userId: 3,
+    roleId: 2,
+  },
+];
+
+const run = (asyc = async () => {
+  await prisma.role.createMany({ data: roleData });
+  await prisma.user.createMany({ data: userData });
+  await prisma.userRole.createMany({ data: userRoleData });
+});
+
+run();

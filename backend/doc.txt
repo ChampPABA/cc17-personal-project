@@ -1,3 +1,4 @@
+--USER
 --- REGISTER
 POST /user/register
 BODY 
@@ -19,4 +20,14 @@ BODY
 RESPONSE
   200 message
   400 message
+  500 message
+
+-- GET ALL USER By ADMIN
+GET /user/all
+HEADER
+  Authorization Bearer access_token
+RESPONSE
+  200 All User
+  400 message
+  401 message
   500 message
