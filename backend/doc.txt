@@ -10,3 +10,13 @@ RESPONSE
   200 message
   400 message
   500 message
+
+--- LOGIN
+POST /user/login
+BODY
+  email
+  password
+RESPONSE
+  200 message
+  400 message
+  500 message
