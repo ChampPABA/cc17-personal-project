@@ -20,6 +20,7 @@ userController.register = async (req, res, next) => {
     req.body.password = await hashService.hash(password);
     console.log(req.body);
     const user = await userService.createUser(req.body);
+    // ตรงนี้ค่อยมาปรับ ใช้ prisma transaction ถ้าไม่ใช้อาจเกิดปัญหา เพราะ จริงๆ แล้วต้อง create ทั้ง 2 ตาราง แต่ถ้าตารางใด ตารางหนึ่ง create ไม่ได้ อีกตารางต้อง rollback
     const userRole = await roleService.findIdByRoleName(RoleName.USER);
     await userService.createUserRole({ userId: user.id, roleId: userRole.id });
 
@@ -48,12 +49,6 @@ userController.login = async (req, res, next) => {
       });
     }
 
-    // if (!existUser.isActive) {
-    //   createError({
-    //     message: "Do not have permission to access.",
-    //     statusCode: 400,
-    //   });
-    // }
     const accessToken = jwtService.sign({ id: existUser.id });
     res.status(200).json({ accessToken });
   } catch (error) {

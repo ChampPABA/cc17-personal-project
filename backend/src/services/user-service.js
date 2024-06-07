@@ -22,4 +22,27 @@ userService.findUserById = (userId) =>
     },
   });
 
+// เขียน Function รอไว้ก่อน ทำ Front-end ก่อนค่อยมาทำ
+userService.activateUser = (userId) =>
+  prisma.user.update({
+    where: { id: userId },
+    data: { isActive: true },
+  });
+
+// เขียน Function รอไว้ก่อน ทำ Front-end ก่อนค่อยมาทำ
+userService.deactivateUser = (userId) =>
+  prisma.user.update({
+    where: { id: userId },
+    data: { isActive: false },
+  });
+
+// เขียน Function รอไว้ก่อน ทำ Front-end ก่อนค่อยมาทำ
+userService.assignRoleToUser = (userId, roleId) =>
+  prisma.userRole.create({
+    data: {
+      userId,
+      roleId,
+    },
+  });
+
 module.exports = userService;

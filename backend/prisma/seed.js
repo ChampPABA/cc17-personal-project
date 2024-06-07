@@ -24,6 +24,30 @@ const userData = [
     email: "user3@ifcg.co.th",
     password,
   },
+  {
+    firstName: "Doppo",
+    lastName: "Orochi",
+    email: "user4@ifcg.co.th",
+    password,
+  },
+  {
+    firstName: "Gouki",
+    lastName: "Shibukawa",
+    email: "user5@ifcg.co.th",
+    password,
+  },
+  {
+    firstName: "Biscuit",
+    lastName: "Oliva",
+    email: "user6@ifcg.co.th",
+    password,
+  },
+  {
+    firstName: "Retsu",
+    lastName: "Kaioh",
+    email: "user7@ifcg.co.th",
+    password,
+  },
 ];
 
 const userRoleData = [
@@ -34,12 +58,37 @@ const userRoleData = [
   },
   {
     assignedAt: new Date(),
-    userId: 2,
+    userId: 1,
     roleId: 2,
   },
   {
     assignedAt: new Date(),
+    userId: 2,
+    roleId: 1,
+  },
+  {
+    assignedAt: new Date(),
     userId: 3,
+    roleId: 2,
+  },
+  {
+    assignedAt: new Date(),
+    userId: 4,
+    roleId: 2,
+  },
+  {
+    assignedAt: new Date(),
+    userId: 5,
+    roleId: 2,
+  },
+  {
+    assignedAt: new Date(),
+    userId: 6,
+    roleId: 2,
+  },
+  {
+    assignedAt: new Date(),
+    userId: 7,
     roleId: 2,
   },
 ];
