@@ -1,10 +1,54 @@
+import { useState } from "react";
 import Button from "../../../components/Button";
 import Input from "../../../components/Input";
+import validateLogin from "../validators/login-validator";
+import useAuth from "../../../hooks/useAuth";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { axiosError } from "../../../utils/axios-error";
+
+const initialInput = {
+  email: "",
+  password: "",
+};
+
+const initialInputError = {
+  email: "",
+  password: "",
+};
 
 export default function LoginForm() {
+  const [input, setInput] = useState(initialInput);
+  const [inputError, setInputError] = useState(initialInputError);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleChangeInput = (event) => {
+    setInput({ ...input, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmitForm = async (event) => {
+    try {
+      event.preventDefault();
+      const error = validateLogin(input);
+      if (error) {
+        return setInputError(error);
+      }
+
+      setInputError(initialInputError);
+
+      await login(input);
+      navigate("/");
+      toast.success("Login Successfully");
+    } catch (error) {
+      console.log(error);
+      axiosError(error);
+    }
+  };
   return (
     <>
-      <form className="space-y-6" action="#" method="POST">
+      <form className="space-y-6" onSubmit={handleSubmitForm}>
         <div>
           <label
             htmlFor="email"
@@ -13,7 +57,13 @@ export default function LoginForm() {
             Email address
           </label>
           <div className="mt-2">
-            <Input autoComplete="email" />
+            <Input
+              autoComplete="email"
+              name="email"
+              value={input.email}
+              onChange={handleChangeInput}
+              error={inputError.email}
+            />
           </div>
         </div>
 
@@ -37,8 +87,11 @@ export default function LoginForm() {
           <div className="mt-2">
             <Input
               type="password"
-              error="ทดสอบ"
               autoComplete="current-password"
+              name="password"
+              value={input.password}
+              onChange={handleChangeInput}
+              error={inputError.password}
             />
           </div>
         </div>

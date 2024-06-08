@@ -37,7 +37,7 @@ export default function RegisterForm({ onSuccess }) {
       if (error) {
         return setInputError(error);
       }
-      setInputError({ ...initialInput });
+      setInputError(initialInputError);
 
       await userApi.register(input);
       onSuccess();

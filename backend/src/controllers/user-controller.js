@@ -24,7 +24,7 @@ userController.register = async (req, res, next) => {
     const userRole = await roleService.findIdByRoleName(RoleName.USER);
     await userService.createUserRole({ userId: user.id, roleId: userRole.id });
 
-    res.status(201).json({ message: "user created" });
+    res.status(201).json({ message: "User created" });
   } catch (error) {
     next(error);
   }
@@ -36,7 +36,7 @@ userController.login = async (req, res, next) => {
     const existUser = await userService.findUserByEmail(email);
     if (!existUser) {
       createError({
-        message: "Do not have permission to access.",
+        message: "This user is not registered.",
         statusCode: 400,
       });
     }
@@ -49,11 +49,22 @@ userController.login = async (req, res, next) => {
       });
     }
 
+    if (!existUser.isActive) {
+      createError({
+        message: "This account is not activated",
+        statusCode: 403,
+      });
+    }
+
     const accessToken = jwtService.sign({ id: existUser.id });
     res.status(200).json({ accessToken });
   } catch (error) {
     next(error);
   }
+};
+
+userController.getMe = async (req, res, next) => {
+  res.status(200).json({ user: req.user });
 };
 
 module.exports = userController;

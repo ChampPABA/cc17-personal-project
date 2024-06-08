@@ -24,6 +24,13 @@ const authenticate = async (req, res, next) => {
       });
     }
 
+    if (!user.isActive) {
+      createError({
+        message: "user is not activated",
+        statusCode: 403,
+      });
+    }
+
     delete user.password;
     req.user = user;
     next();

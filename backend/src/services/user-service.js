@@ -6,7 +6,6 @@ userService.findUserByEmail = (email) =>
   prisma.user.findFirst({
     where: {
       email,
-      isActive: true,
     },
   });
 
@@ -18,7 +17,6 @@ userService.findUserById = (userId) =>
   prisma.user.findUnique({
     where: {
       id: userId,
-      isActive: true,
     },
   });
 
