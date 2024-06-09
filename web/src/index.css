@@ -6,4 +6,23 @@
 
 body {
   @apply font-sans;
+  line-height: 1.3;
+}
+
+@layer base {
+  table {
+  }
+  th,
+  td {
+    @apply py-3 px-2.5 text-sm text-left border-y border-gray-200;
+  }
+  thead {
+    @apply bg-neutral-100;
+  }
+  th {
+    @apply font-semibold;
+  }
+  /* a {
+    @apply text-ifcg-green-high hover:underline;
+  } */
 }

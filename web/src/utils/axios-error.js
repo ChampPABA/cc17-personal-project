@@ -8,6 +8,9 @@ export const axiosError = (error) => {
       case 400:
         message = "Invalid email or password";
         break;
+      case 401:
+        message = "Unauthorized";
+        break;
       case 403:
         message = "This account is not activated. please contact administrator";
         break;

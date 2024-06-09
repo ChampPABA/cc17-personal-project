@@ -18,6 +18,13 @@ userService.findUserById = (userId) =>
     where: {
       id: userId,
     },
+    include: {
+      userRoles: {
+        include: {
+          role: true,
+        },
+      },
+    },
   });
 
 // เขียน Function รอไว้ก่อน ทำ Front-end ก่อนค่อยมาทำ

@@ -1,3 +1,4 @@
+const { userRole } = require("../models/prisma");
 const jwtService = require("../services/jwt-service");
 const userService = require("../services/user-service");
 const createError = require("../utils/create-error");
@@ -32,7 +33,10 @@ const authenticate = async (req, res, next) => {
     }
 
     delete user.password;
-    req.user = user;
+
+    const userRoles = user.userRoles.map((userRole) => userRole.role.roleName);
+    req.user = { ...user, userRoles };
+    console.log(req.user);
     next();
   } catch (error) {
     next(error);
