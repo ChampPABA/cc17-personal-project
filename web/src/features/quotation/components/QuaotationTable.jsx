@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { QuotationStatus } from "../../../utils/quotation-status";
+import { QuotationStatus } from "../../../utils/contants/quotation-status";
+import { getDateFormat } from "../../../utils/date-format";
 
 function QuaotationTable() {
   const recentOrderData = [
@@ -65,14 +66,6 @@ function QuaotationTable() {
     },
   ];
 
-  const getDateFormat = (unformatDate) => {
-    const date = new Date(unformatDate);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
   return (
     <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gay-200 flex1">
       <strong className="text-gray-700 font-medium">Quatations</strong>
@@ -86,7 +79,7 @@ function QuaotationTable() {
               <td>Order Date</td>
               <td>Order Total</td>
               <td>Shipping Address</td>
-              <td>Order Status</td>
+              <td>Status</td>
             </tr>
           </thead>
           <tbody>

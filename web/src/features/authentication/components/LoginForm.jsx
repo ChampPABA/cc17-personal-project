@@ -38,7 +38,9 @@ export default function LoginForm() {
 
       setInputError(initialInputError);
 
+      // เขียน if chec role แล้วค่อย navigate
       await login(input);
+
       navigate("/");
       toast.success("Login Successfully");
     } catch (error) {

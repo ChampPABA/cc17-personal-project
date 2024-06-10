@@ -1,9 +1,4 @@
-import {
-  HiOutlineViewGrid,
-  HiOutlineCube,
-  HiOutlineQuestionMarkCircle,
-  HiOutlineCog,
-} from "react-icons/hi";
+import { HiOutlineQuestionMarkCircle, HiOutlineCog } from "react-icons/hi";
 import { FaUserEdit, FaEdit } from "react-icons/fa";
 
 export const SIDEBAR_LINKS = [

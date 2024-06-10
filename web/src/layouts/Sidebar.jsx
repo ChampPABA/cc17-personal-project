@@ -47,7 +47,7 @@ export default function Sidebar() {
       <div className="flex flex-col gap-0.5 pt-2 border-t border-ifcg-gray-low">
         {SIDEBAR_BOTTOM_LINKS.map((el) => (
           <SidebarItem
-            key={el.ky}
+            key={el.key}
             Icon={el.icon}
             to={el.to}
             label={el.label}

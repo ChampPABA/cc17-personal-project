@@ -1,16 +1,19 @@
 import { Suspense } from "react";
-import UserContextProvider from "./contexts/UserContext";
 import Router from "./routes";
 import { Toaster } from "sonner";
 import Loading from "./components/Loading";
+import useAuth from "./hooks/useAuth";
 
 function App() {
+  const { isAuthUserLoading } = useAuth();
+  if (isAuthUserLoading) {
+    return <Loading />;
+  }
+
   return (
     <Suspense fallback={<Loading />}>
-      <UserContextProvider>
-        <Router />
-        <Toaster richColors />
-      </UserContextProvider>
+      <Router />
+      <Toaster richColors />
     </Suspense>
   );
 }
