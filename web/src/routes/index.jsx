@@ -3,6 +3,7 @@ import { lazy } from "react";
 import ProtectedRoute from "../features/authentication/components/ProtectedRoute";
 import RedirectIfLogged from "../features/authentication/components/RedirectIfLogged";
 import QuotationManagement from "../pages/QuotationManagement";
+import QuotationPage from "../pages/QuotationPage";
 
 const LoginPage = lazy(() => import("../pages/LoginPage"));
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       { path: "/profile", element: <h1>Profile</h1> },
       { path: "/user_management", element: <h1>User Management</h1> },
       { path: "/quotation_management", element: <QuotationManagement /> },
+      { path: "/quotation", element: <QuotationPage /> },
       { path: "/settings", element: <h1>Settings</h1> },
       { path: "/support", element: <h1>Support</h1> },
     ],

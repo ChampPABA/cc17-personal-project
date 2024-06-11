@@ -1,13 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import Avatar from "../components/Avatar";
 import { RightFromBracketIcon } from "../icons";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
 
 export default function Dropdown() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   const { logout, authUser } = useAuth();
 
@@ -18,8 +19,26 @@ export default function Dropdown() {
     toast.success("Logout Successfully");
   };
 
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <div role="button" onClick={() => setOpen((prev) => !prev)}>
         <Avatar />
       </div>

@@ -45,12 +45,13 @@ export default function RegisterForm({ onSuccess }) {
     } catch (error) {
       console.log(error);
       if (error instanceof AxiosError) {
-        if (error.response.data.field === "email")
+        if (error.response.status === 400)
           setInputError((prev) => ({
             ...prev,
             email: "email already in use",
           }));
       }
+      toast.error(error.response.data.message);
     }
   };
 
