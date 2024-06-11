@@ -12,7 +12,7 @@ const registerScema = Joi.object({
   email: Joi.string()
     .required()
     .email({ tlds: false })
-    .pattern(/^[\w-\.]+@ifcg\.co\.th$/)
+    .pattern(/^[\w-\\.]+@ifcg\.co\.th$/)
     .messages({
       "string.empty": "email is required.",
       "string.pattern.base": "only @ifcg.co.th email address",

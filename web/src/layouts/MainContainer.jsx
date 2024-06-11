@@ -8,7 +8,7 @@ export default function MainContainer() {
       <div className="flex flex-row bg-neutral-100 h-screen w-screen">
         <Sidebar />
         <div className="p-4 w-full">
-          <Header />
+          {/* <Header /> */}
           <Outlet />
         </div>
       </div>
