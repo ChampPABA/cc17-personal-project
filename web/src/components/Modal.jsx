@@ -27,7 +27,9 @@ export default function Modal({ width = 30, title, children, open, onClose }) {
                   <h5 className="text-2xl font-medium">{title}</h5>
                   <button onClick={onClose}>&#10005;</button>
                 </div>
-                <div className="p-4">{children}</div>
+                <div className="p-4 overflow-auto max-h-[calc(100vh-200px)]">
+                  {children}
+                </div>
               </div>
             </div>
           </div>

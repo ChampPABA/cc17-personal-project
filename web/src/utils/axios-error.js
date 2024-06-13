@@ -4,7 +4,7 @@ import { toast } from "sonner";
 export const axiosError = (error) => {
   if (error instanceof AxiosError) {
     let message;
-    switch (error.response.status) {
+    switch (error.response?.status) {
       case 400:
         message = "Invalid email or password";
         break;

@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const registerScema = Joi.object({
+const registerSchema = Joi.object({
   firstName: Joi.string()
     .required()
     .trim()
@@ -37,7 +37,7 @@ const registerScema = Joi.object({
 });
 
 const validateRegister = (input) => {
-  const { error } = registerScema.validate(input, { abortEarly: false });
+  const { error } = registerSchema.validate(input, { abortEarly: false });
   if (error) {
     const result = error.details.reduce((acc, el) => {
       acc[el.path[0]] = el.message;

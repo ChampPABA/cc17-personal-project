@@ -8,17 +8,16 @@ datasource db {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  firstName     String?
-  lastName      String?
-  email         String         @unique
-  password      String
-  isActive      Boolean        @default(false)
-  createdAt     DateTime       @default(now()) @db.Timestamp(0)
-  updatedAt     DateTime?      @updatedAt @db.Timestamp(0)
-  userRoles     UserRole[]
-  quotations    Quotation[]
-  notifications Notification[]
+  id         Int         @id @default(autoincrement())
+  firstName  String?
+  lastName   String?
+  email      String      @unique
+  password   String
+  isActive   Boolean     @default(false)
+  createdAt  DateTime    @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime?   @updatedAt @db.Timestamp(0)
+  userRoles  UserRole[]
+  quotations Quotation[]
 
   @@map("users")
 }
@@ -70,7 +69,7 @@ model Quotation {
   createdAt         DateTime   @default(now()) @db.Timestamp(0)
   updatedAt         DateTime?  @updatedAt @db.Timestamp(0)
   deletedAt         DateTime?  @db.Timestamp(0)
-  approveEmail      String?
+  pdfLink           String?
 
   user User @relation(fields: [userId], references: [id])
 
@@ -80,16 +79,4 @@ model Quotation {
 enum StatusName {
   DRAFTED
   COMPLETED
-}
-
-model Notification {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  message   String
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now()) @db.Timestamp(0)
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@map("notifications")
 }

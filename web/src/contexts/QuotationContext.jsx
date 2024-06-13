@@ -1,6 +1,5 @@
-import { createContext, useRef, useState } from "react";
+import { createContext, useState } from "react";
 import { getDateFormat } from "../utils/date-format";
-import { useReactToPrint } from "react-to-print";
 
 export const QuotationContext = createContext();
 
@@ -21,7 +20,6 @@ const initialQuotationData = {
   downPayment: "",
   commonFee: "",
   sinkingFund: "",
-  approveEmail: "",
 };
 
 const initialQuotationDataError = {
