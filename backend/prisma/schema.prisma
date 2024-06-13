@@ -57,11 +57,13 @@ model Quotation {
   customerEmail     String?
   projectName       String?
   roomNo            String?
+  roomFloor         String?
   roomType          String?
   roomSize          Decimal?   @db.Decimal(12, 2)
+  roomPrice         Decimal?   @db.Decimal(12, 2)
   roomDiscount      Decimal?   @db.Decimal(12, 2)
   bookingPayment    Decimal?   @db.Decimal(12, 2)
-  transferPayment   Decimal?   @db.Decimal(12, 2)
+  downPayment       Decimal?   @db.Decimal(12, 2)
   commonFee         Decimal?   @db.Decimal(12, 2)
   sinkingFund       Decimal?   @db.Decimal(12, 2)
   status            StatusName @default(DRAFTED)
