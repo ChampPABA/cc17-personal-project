@@ -18,6 +18,7 @@
 //   next();
 // };
 
+const { quotationSchema } = require("../validators/quotation-validator");
 const { registerSchema, loginSchema } = require("../validators/user-validator");
 
 const validate = (schema) => (req, res, next) => {
@@ -35,3 +36,4 @@ const validate = (schema) => (req, res, next) => {
 
 exports.registerValidator = validate(registerSchema);
 exports.loginValidator = validate(loginSchema);
+exports.quotationValidator = validate(quotationSchema);

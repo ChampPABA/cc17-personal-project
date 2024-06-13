@@ -6,6 +6,8 @@ const limiter = require("./middlewares/rate-limit");
 const notFoundMiddleware = require("./middlewares/not-found");
 const errorMiddleware = require("./middlewares/error");
 const userRouter = require("./routes/user-route");
+const quotationRouter = require("./routes/quotation-route");
+const authenticate = require("./middlewares/authenticate");
 
 const app = express();
 app.use(cors());
@@ -14,6 +16,8 @@ app.use(limiter);
 app.use(express.json());
 
 app.use("/user", userRouter);
+
+app.use("/quotation", authenticate, quotationRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

@@ -32,12 +32,56 @@ RESPONSE
   401 message
   500 message
 
--- GET ALL USER By ADMIN
-GET /user/all
+--- CREATE QUOTATION
+post /quotation/CREATE
 HEADER
   Authorization Bearer access_token
 RESPONSE
-  200 All User
+BODY {multipart/formdata}
+  customerFirstName
+  customerLastName
+  customerMobile
+  customerEmail
+  projectName
+  roomNo
+  roomFloor
+  roomType
+  roomSize
+  roomPrice
+  roomDiscount
+  bookingPayment
+  downPayment
+  commonFee
+  sinkingFund
+RESPONSE
+  200 message
   400 message
-  401 message
   500 message
+
+  --- GET QUOTATION
+  get /quotation/
+  HEADER
+    Authorization Bearer access_token
+RESPONSE
+  id
+  userId
+  customerFirstName
+  customerLastName
+  customerMobile
+  customerEmail
+  projectName
+  roomNo
+  roomFloor
+  roomType
+  roomSize
+  roomPrice
+  roomDiscount
+  bookingPayment
+  downPayment
+  commonFee
+  sinkingFund
+  status
+  createdAt
+  updatedAt
+  deletedAt
+
