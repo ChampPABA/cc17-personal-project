@@ -1,20 +1,32 @@
-import { Link, useNavigate } from "react-router-dom";
-import { QuotationStatus } from "../../../utils/contants/quotation-status";
+import { useNavigate } from "react-router-dom";
+import QuotationStatus from "../../../utils/contants/quotation-status";
 import { getDateFormat } from "../../../utils/date-format";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDeleteSweep } from "react-icons/md";
 import { PiPrinterLight } from "react-icons/pi";
+import { FiSend } from "react-icons/fi";
+import { AiOutlineLink } from "react-icons/ai";
 import Button from "../../../components/Button";
 import Loading from "../../../components/Loading";
 import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import QuotationTemplate from "./QuotationTemplate";
 import useQuotation from "../../../hooks/useQuotation";
+import { toast } from "sonner";
+import Modal from "../../../components/Modal";
+import Input from "../../../components/Input";
+import { axiosError } from "../../../utils/axios-error";
+import quotationApi from "../../../apis/quotation";
 
 function QuaotationTable({ quotations, isLoading }) {
   const navigate = useNavigate();
   const componentRef = useRef();
   const { setQuotationData, resetQuotationData } = useQuotation();
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [selectedQuotation, setSelectedQuotation] = useState(null);
+  const [email, setEmail] = useState("");
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [newStatus, setnewStatus] = useState("");
 
   const handleCreateQuotation = () => {
     resetQuotationData();
@@ -28,6 +40,53 @@ function QuaotationTable({ quotations, isLoading }) {
   const handlePrint = async (quotation) => {
     await setQuotationData(quotation);
     handlePrintAction();
+  };
+
+  const handleSendEmail = (quotation) => {
+    setSelectedQuotation(quotation);
+    setEmailModalOpen(true);
+  };
+
+  const handleCopyLink = (pdfLink) => {
+    navigator.clipboard.writeText(pdfLink);
+    toast.success("Quotation Link Copied");
+  };
+
+  const handleEdit = async (quotation) => {
+    await setQuotationData(quotation);
+    navigate(`quotation/${quotation.id}`);
+  };
+
+  const handleDelete = (quotation) => {
+    // รอเขียน Logic
+  };
+
+  const sendEmail = () => {
+    // รอเขียน Logic ส่ง email ด้วย selectedQuotation.pdfLink แล้วก็ email
+    setEmailModalOpen(false);
+    toast.success("Email Sent Succesfully");
+  };
+
+  const handleStatusChange = (quotation, status) => {
+    setSelectedQuotation(quotation);
+    setnewStatus(status);
+    setStatusModalOpen(true);
+  };
+
+  const changeStatus = async () => {
+    try {
+      await quotationApi.updateStatus(selectedQuotation.id, newStatus);
+      // อัปเดตสถานะใน quotations array เพื่อแสดงผลทันทีบน UI
+      const updatedQuotations = quotations.map((quotation) =>
+        quotation.id === selectedQuotation.id
+          ? { ...quotation, status: newStatus }
+          : quotation
+      );
+      setStatusModalOpen(false);
+      toast.success("Status Updated Successfully");
+    } catch (error) {
+      axiosError(error);
+    }
   };
 
   return (
@@ -45,7 +104,7 @@ function QuaotationTable({ quotations, isLoading }) {
         <table className="w-full text-gray-700 border-x border-gray-200 rounded-sm">
           <thead className="sticky top-0">
             <tr>
-              <td>No.</td>
+              <td>Id</td>
               <td>Customer</td>
               <td>Date</td>
               <td>Project Name</td>
@@ -57,31 +116,88 @@ function QuaotationTable({ quotations, isLoading }) {
           <tbody>
             {quotations.map((quotation) => (
               <tr key={quotation.id}>
-                <td role="button" className="hover:text-ifcg-red-low">
-                  <Link to={`/quotation/${quotation.id}`}>#{quotation.id}</Link>
-                </td>
+                <td>{quotation.id}</td>
                 <td>
                   {quotation.customerFirstName} {quotation.customerLastName}
                 </td>
                 <td>{getDateFormat(quotation.createdAt)}</td>
                 <td>{quotation.projectName}</td>
                 <td>{quotation.roomNo}</td>
-                <td>{QuotationStatus(quotation.status)}</td>
+                <td>
+                  <select
+                    value={quotation.status}
+                    onChange={(event) =>
+                      handleStatusChange(quotation, event.target.value)
+                    }
+                    className={`border border-gray-300 rounded-md px-2 py-1 ${
+                      QuotationStatus[quotation.status]
+                    }`}
+                  >
+                    <option
+                      value="DRAFTED"
+                      className="text-yellow-600 bg-yellow-100"
+                    >
+                      Drafted
+                    </option>
+                    <option
+                      value="COMPLETED"
+                      className="text-green-600 bg-green-100"
+                    >
+                      Completed
+                    </option>
+                  </select>
+                </td>
                 <td className="flex justify-center items-center gap-4 text-2xl">
-                  <div className="w-10 h-10 flex justify-center items-center rounded-full bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer">
+                  <div
+                    className="w-10 h-10 flex justify-center items-center rounded-full bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer"
+                    onClick={() => handleEdit(quotation)}
+                  >
                     <CiEdit />
                   </div>
-                  <div className="w-10 h-10 flex justify-center items-center rounded-full bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer">
+                  <div
+                    className="w-10 h-10 flex justify-center items-center rounded-full bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer"
+                    onClick={() => handleDelete(quotation)}
+                  >
                     <MdOutlineDeleteSweep />
                   </div>
-                  {quotation.status === "COMPLETED" && (
-                    <div
-                      className="w-10 h-10 flex justify-center items-center rounded-full bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer"
-                      onClick={() => handlePrint(quotation)}
-                    >
-                      <PiPrinterLight />
-                    </div>
-                  )}
+                  <div
+                    className={`w-10 h-10 flex justify-center items-center rounded-full ${
+                      quotation.status === "COMPLETED"
+                        ? "bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer"
+                        : "bg-ifcg-gray-low opacity-50"
+                    }`}
+                    onClick={() =>
+                      quotation.status === "COMPLETED" && handlePrint(quotation)
+                    }
+                  >
+                    <PiPrinterLight />
+                  </div>
+                  <div
+                    className={`w-10 h-10 flex justify-center items-center rounded-full ${
+                      quotation.status === "COMPLETED"
+                        ? "bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer"
+                        : "bg-ifcg-gray-low opacity-50"
+                    }`}
+                    onClick={() =>
+                      quotation.status === "COMPLETED" &&
+                      handleSendEmail(quotation)
+                    }
+                  >
+                    <FiSend />
+                  </div>
+                  <div
+                    className={`w-10 h-10 flex justify-center items-center rounded-full ${
+                      quotation.status === "COMPLETED"
+                        ? "bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer"
+                        : "bg-ifcg-gray-low opacity-50"
+                    }`}
+                    onClick={() =>
+                      quotation.status === "COMPLETED" &&
+                      handleCopyLink(quotation.pdfLink)
+                    }
+                  >
+                    <AiOutlineLink />
+                  </div>
                 </td>
               </tr>
             ))}
@@ -91,6 +207,43 @@ function QuaotationTable({ quotations, isLoading }) {
       <div style={{ display: "none" }}>
         <QuotationTemplate ref={componentRef} />
       </div>
+      <Modal
+        width={30}
+        title="Send Email"
+        open={emailModalOpen}
+        onClose={() => setEmailModalOpen(false)}
+      >
+        <div>
+          <label>Email</label>
+          <Input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+          <div className="flex justify-end mt-4">
+            <Button bg="green" onClick={sendEmail}>
+              Send
+            </Button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        width={30}
+        title="Change Status"
+        open={statusModalOpen}
+        onClose={() => setStatusModalOpen(false)}
+      >
+        <div className="text-center">
+          <small>
+            Are you sure you want to change the status to {newStatus}?
+          </small>
+          <div className="flex justify-end mt-4">
+            <Button bg="green" onClick={changeStatus}>
+              Confirm
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -6,7 +6,7 @@ export const axiosError = (error) => {
     let message;
     switch (error.response?.status) {
       case 400:
-        message = "Invalid email or password";
+        message = "Bad Requested";
         break;
       case 401:
         message = "Unauthorized";

@@ -32,4 +32,14 @@ quotationService.findQuotationByAuthUserId = (userId) =>
     },
   });
 
+quotationService.updateQuotationStatusByQuotationId = (id, status) =>
+  prisma.quotation.update({
+    data: {
+      status,
+    },
+    where: {
+      id,
+    },
+  });
+
 module.exports = quotationService;

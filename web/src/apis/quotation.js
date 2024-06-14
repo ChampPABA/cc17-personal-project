@@ -11,4 +11,7 @@ quotationApi.uploadPdf = (pdf) =>
 
 quotationApi.getAllQuotations = () => axios.get("/quotation");
 
+quotationApi.updateStatus = (quotationId, newStatus) =>
+  axios.put(`/quotation/${quotationId}/status`, { status: newStatus });
+
 export default quotationApi;

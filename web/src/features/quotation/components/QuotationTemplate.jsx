@@ -1,4 +1,4 @@
-import React from "react";
+import { forwardRef } from "react";
 import PaymentDetails from "./PaymentDetails";
 import QuotationHeader from "./QuotationHeader";
 import RemarkDetails from "./RemarkDetails";
@@ -6,7 +6,7 @@ import RoomDetailsTable from "./RoomDetailsTable";
 import SignatureSection from "./SignatureSection";
 import "./quotation.css";
 
-const QuotationTemplate = React.forwardRef((props, ref) => {
+const QuotationTemplate = forwardRef((props, ref) => {
   return (
     <div
       ref={ref}

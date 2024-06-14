@@ -14,6 +14,6 @@ quotationRouter.post(
   quotationController.create
 );
 
-// quotationRouter.post("/create", quotationValidator);
+quotationRouter.put("/:id/status", quotationController.updateQuotationStatus);
 
 module.exports = quotationRouter;
