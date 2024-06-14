@@ -22,13 +22,9 @@ const { quotationSchema } = require("../validators/quotation-validator");
 const { registerSchema, loginSchema } = require("../validators/user-validator");
 
 const validate = (schema) => (req, res, next) => {
-  const { value, error } = schema.validate(req.body, { abortEarly: false });
+  const { value, error } = schema.validate(req.body);
   if (error) {
-    const errors = error.details.reduce((acc, err) => {
-      acc[err.path[0]] = err.message;
-      return acc;
-    }, {});
-    return res.status(400).json({ errors });
+    return res.status(400).json({ message: error.details[0].message });
   }
   req.body = value;
   next();

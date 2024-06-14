@@ -1,13 +1,13 @@
 const Joi = require("joi");
 
-const quotationSchema = Joi.object({
+exports.quotationSchema = Joi.object({
   customerFirstName: Joi.string(),
   customerLastName: Joi.string().allow(""),
   customerMobile: Joi.string()
     .pattern(/^[0-9]{10}$/)
     .allow(""),
   customerEmail: Joi.string().email({ tlds: false }).allow(""),
-  projectName: Joi.string().required(),
+  projectName: Joi.string(),
   roomNo: Joi.string().allow(""),
   roomFloor: Joi.string().allow(""),
   roomType: Joi.string().allow(""),

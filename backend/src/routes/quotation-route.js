@@ -6,10 +6,14 @@ const upload = require("../middlewares/upload");
 const quotationRouter = express.Router();
 
 quotationRouter.get("/", quotationController.getQuotationByAuthUserId);
+
 quotationRouter.post(
   "/create",
+  quotationValidator,
   upload.single("file"),
   quotationController.create
 );
+
+// quotationRouter.post("/create", quotationValidator);
 
 module.exports = quotationRouter;

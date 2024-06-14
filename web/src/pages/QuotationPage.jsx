@@ -13,9 +13,11 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import quotationApi from "../apis/quotation";
 import { axiosError } from "../utils/axios-error";
+import Loading from "../components/Loading";
 
 function QuotationPage() {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const componentRef = useRef();
   const navigate = useNavigate();
   const { quotationData, setQuotationDataError } = useQuotation();
@@ -36,6 +38,7 @@ function QuotationPage() {
   };
 
   const handleSave = async () => {
+    setIsLoading(true);
     try {
       const error = validateQuotation(quotationData);
       if (error) {
@@ -45,31 +48,57 @@ function QuotationPage() {
       }
       setQuotationDataError({});
 
-      const canvas = await html2canvas(componentRef.current);
-      const imgData = canvas.toDataURL("image/png");
+      const canvas = await html2canvas(componentRef.current, {
+        scale: 1.6, // ตั้งค่า ความละเอียดของ PDF
+      });
+      const imgData = canvas.toDataURL("image/png", 0.5); // เพิ่ม/ลด คุณภาพเพื่อลดขนาด file ของ PNG
 
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, "PNG", 0, 0);
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+      // set สัดส่วนของ pdf Option1 แบบสวยงาม
+      // const imgProps = pdf.getImageProperties(imgData);
+      // const pdfWidth = pdf.internal.pageSize.getWidth();
+      // const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      // Option2 แบบตรงตาม สัดส่วน A4
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdfWidth * (297 / 210);
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
       const pdfBlob = pdf.output("blob");
 
+      // // สร้าง URL เอาไว้ดู PDF
+      // const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // // เปิด PDF ใน Tab ใหม่
+      // window.open(pdfUrl, "_blank");
+
+      // ส่งไปหลังบ้าน
       const formData = new FormData();
       formData.append("file", pdfBlob, "quotation.pdf");
       formData.append("data", JSON.stringify(quotationData));
 
       const res = await quotationApi.uploadPdf(formData);
 
-      if (res.status === 200) {
+      if (res.status === 201) {
         toast.success("save PDF successfully");
         navigate("/quotation_management");
       }
     } catch (error) {
       console.log(error);
       axiosError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
+      {isLoading && <Loading />}
       <main
         className="m-5 p-5"
         style={{
