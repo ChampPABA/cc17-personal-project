@@ -1,4 +1,3 @@
-import { useReactToPrint } from "react-to-print";
 import { useNavigate } from "react-router-dom";
 import QuotationTemplate from "../features/quotation/components/QuotationTemplate";
 import "../features/quotation/components/quotation.css";
@@ -21,10 +20,6 @@ function QuotationPage() {
   const componentRef = useRef();
   const navigate = useNavigate();
   const { quotationData, setQuotationDataError } = useQuotation();
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
 
   const handlePreview = () => {
     const error = validateQuotation(quotationData);
@@ -126,10 +121,7 @@ function QuotationPage() {
         >
           <div className=" shadow-lg">
             <div className="flex justify-center items-center sticky top-0">
-              <Button onClick={handlePrint} bg="green">
-                Print
-              </Button>
-              <Button onClick={handleSave} bg="gray">
+              <Button onClick={handleSave} bg="green">
                 Save
               </Button>
             </div>

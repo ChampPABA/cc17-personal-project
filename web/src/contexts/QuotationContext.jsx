@@ -38,7 +38,6 @@ const initialQuotationDataError = {
   downPayment: "",
   commonFee: "",
   sinkingFund: "",
-  approveEmail: "",
 };
 
 export default function QuotationContextProvider({ children }) {
@@ -50,12 +49,18 @@ export default function QuotationContextProvider({ children }) {
 
   const [isQuotationDataLoading, setIsQuotationDataLoading] = useState(true);
 
+  const resetQuotationData = () => {
+    setQuotationData(initialQuotationData);
+    setQuotationDataError({});
+  };
+
   const context = {
     quotationData,
     setQuotationData,
     quotationDataError,
     setQuotationDataError,
     isQuotationDataLoading,
+    resetQuotationData,
   };
   return (
     <QuotationContext.Provider value={context}>

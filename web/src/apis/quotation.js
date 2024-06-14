@@ -9,4 +9,6 @@ quotationApi.uploadPdf = (pdf) =>
     },
   });
 
+quotationApi.getAllQuotations = () => axios.get("/quotation");
+
 export default quotationApi;
