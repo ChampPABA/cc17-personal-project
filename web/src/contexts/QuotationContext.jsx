@@ -1,5 +1,8 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { getDateFormat } from "../utils/date-format";
+import { axiosError } from "../utils/axios-error";
+import quotationApi from "../apis/quotation";
+import { useParams } from "react-router-dom";
 
 export const QuotationContext = createContext();
 
@@ -47,11 +50,76 @@ export default function QuotationContextProvider({ children }) {
     initialQuotationDataError
   );
 
+  const [quotationsData, setQuotationsData] = useState([]);
+
+  const [filterQuotationsData, setFilterQuotationsData] =
+    useState(quotationsData);
+
+  const [isQuotationsDataLoading, setIsQuotationsDataLoading] = useState(true);
+
   const [isQuotationDataLoading, setIsQuotationDataLoading] = useState(true);
+
+  const { id } = useParams();
+
+  const fetchQuotations = async () => {
+    try {
+      const res = await quotationApi.getAllQuotations();
+      setQuotationsData(res.data.quotations);
+      setFilterQuotationsData(res.data.quotations);
+    } catch (error) {
+      console.log(error);
+      axiosError(error);
+    } finally {
+      setIsQuotationsDataLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchQuotations();
+  }, []);
+
+  useEffect(() => {
+    const fetchQuotation = async () => {
+      if (id) {
+        try {
+          const res = await quotationApi.getQuotationById(id);
+          setQuotationData(res.data);
+        } catch (error) {
+          axiosError(error);
+        } finally {
+          setIsQuotationDataLoading(false);
+        }
+      }
+    };
+    fetchQuotation();
+  }, [id]);
 
   const resetQuotationData = () => {
     setQuotationData(initialQuotationData);
     setQuotationDataError({});
+  };
+
+  const updateQuotationStatus = async (quotationId, newStatus) => {
+    try {
+      await quotationApi.updateStatus(quotationId, newStatus);
+      setQuotationsData((prev) =>
+        prev.map((quotation) =>
+          quotation.id === quotationId
+            ? { ...quotation, status: newStatus }
+            : quotation
+        )
+      );
+
+      setFilterQuotationsData((prev) =>
+        prev.map((quotation) =>
+          quotation.id === quotationId
+            ? { ...quotation, status: newStatus }
+            : quotation
+        )
+      );
+    } catch (error) {
+      axiosError(error);
+    }
   };
 
   const context = {
@@ -59,8 +127,16 @@ export default function QuotationContextProvider({ children }) {
     setQuotationData,
     quotationDataError,
     setQuotationDataError,
+    isQuotationsDataLoading,
     isQuotationDataLoading,
     resetQuotationData,
+    quotationsData,
+    setQuotationsData,
+    updateQuotationStatus,
+    filterQuotationsData,
+    setFilterQuotationsData,
+    fetchQuotations,
+    setIsQuotationDataLoading,
   };
   return (
     <QuotationContext.Provider value={context}>

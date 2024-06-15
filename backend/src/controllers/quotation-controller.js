@@ -32,7 +32,7 @@ quotationController.create = async (req, res, next) => {
     };
 
     await quotationService.createQuotation(data);
-    res.status(201).json({ message: "quotation created" });
+    res.status(201).json({ message: "Quotation Created" });
   } catch (error) {
     next(error);
   }
@@ -50,8 +50,8 @@ quotationController.updateQuotationStatus = async (req, res, next) => {
     // ดูว่า User คนนี้ได้เป็นคนสร้าง Quotation รึเปล่า
     if (!result.some((quotation) => quotation.id === Number(id))) {
       createError({
-        message: "You can't edit this quotation",
-        statusCode: 400,
+        message: "You don't have permission to update this quotation's status",
+        statusCode: 403,
       });
     }
 
@@ -60,6 +60,57 @@ quotationController.updateQuotationStatus = async (req, res, next) => {
       status
     );
     res.status(200).json({ message: "Status Updated Successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+quotationController.updateQuotation = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      createError({
+        message: "No file uploaded",
+        statusCode: 400,
+      });
+    }
+
+    const { id } = req.params;
+    const { data } = req.body;
+    const existingQuotation = await quotationService.findQuotationById(
+      Number(id)
+    );
+
+    if (existingQuotation.userId !== req.user.id) {
+      createError({
+        message: "You don't have permission to update this quotation",
+        statusCode: 403,
+      });
+    }
+
+    const updatedData = {
+      ...JSON.parse(data),
+      pdfLink: existingQuotation.pdfLink,
+      // pdfPath: req.file.path,
+    };
+
+    await quotationService.updateQuotation(Number(id), updatedData, req.file);
+    res.status(200).json({ message: "Quotation Updated Successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+quotationController.getQuotationById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const quotation = await quotationService.findQuotationById(Number(id));
+    if (!quotation) {
+      createError({
+        message: "Quotation not found",
+        statusCode: 404,
+      });
+    }
+    res.status(200).json(quotation);
   } catch (error) {
     next(error);
   }

@@ -12,6 +12,15 @@ quotationApi.uploadPdf = (pdf) =>
 quotationApi.getAllQuotations = () => axios.get("/quotation");
 
 quotationApi.updateStatus = (quotationId, newStatus) =>
-  axios.put(`/quotation/${quotationId}/status`, { status: newStatus });
+  axios.patch(`/quotation/${quotationId}/status`, { status: newStatus });
+
+quotationApi.updateQuotation = (id, pdf) =>
+  axios.patch(`/quotation/${id}`, pdf, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+quotationApi.getQuotationById = (id) => axios.get(`/quotation/${id}`);
 
 export default quotationApi;

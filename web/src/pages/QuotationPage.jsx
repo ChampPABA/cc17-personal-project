@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import QuotationTemplate from "../features/quotation/components/QuotationTemplate";
 import "../features/quotation/components/quotation.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import QuotationForm from "../features/quotation/components/QuotationForm";
 import Modal from "../components/Modal";
@@ -13,13 +13,42 @@ import html2canvas from "html2canvas";
 import quotationApi from "../apis/quotation";
 import { axiosError } from "../utils/axios-error";
 import Loading from "../components/Loading";
+import { getDateFormat } from "../utils/date-format";
 
 function QuotationPage() {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const componentRef = useRef();
   const navigate = useNavigate();
-  const { quotationData, setQuotationDataError } = useQuotation();
+  const {
+    quotationData,
+    setQuotationData,
+    setQuotationDataError,
+    isQuotationDataLoading,
+    setIsQuotationDataLoading,
+  } = useQuotation();
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchQuotation = async () => {
+      if (id) {
+        try {
+          setIsQuotationDataLoading(true);
+          const res = await quotationApi.getQuotationById(id);
+          setQuotationData({
+            ...res.data,
+            updatedAt: getDateFormat(new Date()),
+          });
+        } catch (error) {
+          axiosError(error);
+        } finally {
+          setIsQuotationDataLoading(false);
+        }
+      }
+    };
+
+    fetchQuotation();
+  }, [id, setQuotationData, setIsQuotationDataLoading]);
 
   const handlePreview = () => {
     const error = validateQuotation(quotationData);
@@ -77,10 +106,15 @@ function QuotationPage() {
       formData.append("file", pdfBlob, "quotation.pdf");
       formData.append("data", JSON.stringify(quotationData));
 
-      const res = await quotationApi.uploadPdf(formData);
+      let res;
+      if (id) {
+        res = await quotationApi.updateQuotation(id, formData);
+      } else {
+        res = await quotationApi.uploadPdf(formData);
+      }
 
-      if (res.status === 201) {
-        toast.success("save PDF successfully");
+      if (res.status === 201 || res.status === 200) {
+        toast.success("PDF saved successfully");
         navigate("/quotation_management");
       }
     } catch (error) {
@@ -111,6 +145,7 @@ function QuotationPage() {
           <div className="flex justify-center sticky top-0">
             <Button onClick={handlePreview}>Preview</Button>
           </div>
+
           <QuotationForm />
         </div>
         <Modal
@@ -122,7 +157,7 @@ function QuotationPage() {
           <div className=" shadow-lg">
             <div className="flex justify-center items-center sticky top-0">
               <Button onClick={handleSave} bg="green">
-                Save
+                {id ? "Update" : "Save"}
               </Button>
             </div>
 

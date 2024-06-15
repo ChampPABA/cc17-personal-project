@@ -1,6 +1,9 @@
 import Joi from "joi";
 
 const quotationSchema = Joi.object({
+  id: Joi.allow().strip(),
+  userId: Joi.allow().strip(),
+  status: Joi.allow().strip(),
   customerFirstName: Joi.string().messages({
     "string.empty": "data is required",
   }),
@@ -69,6 +72,9 @@ const quotationSchema = Joi.object({
       { "number.greater": "must be positive number" }
     ),
   createdAt: Joi.alternatives().try(Joi.date(), Joi.string().allow("")).strip(),
+  updatedAt: Joi.alternatives().try(Joi.date(), Joi.string().allow("")).strip(),
+  deletedAt: Joi.allow().strip(),
+  pdfLink: Joi.allow().strip(),
 });
 
 const validateQuotation = (input) => {

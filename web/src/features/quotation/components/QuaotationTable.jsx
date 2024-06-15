@@ -16,21 +16,26 @@ import { toast } from "sonner";
 import Modal from "../../../components/Modal";
 import Input from "../../../components/Input";
 import { axiosError } from "../../../utils/axios-error";
-import quotationApi from "../../../apis/quotation";
 
-function QuaotationTable({ quotations, isLoading }) {
+function QuaotationTable() {
   const navigate = useNavigate();
   const componentRef = useRef();
-  const { setQuotationData, resetQuotationData } = useQuotation();
+  const {
+    filterQuotationsData,
+    setQuotationData,
+    resetQuotationData,
+    isQuotationsDataLoading,
+    updateQuotationStatus,
+  } = useQuotation();
   const [emailModalOpen, setEmailModalOpen] = useState(false);
-  const [selectedQuotation, setSelectedQuotation] = useState(null);
-  const [email, setEmail] = useState("");
   const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [selectedQuotation, setSelectedQuotation] = useState(null);
   const [newStatus, setnewStatus] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleCreateQuotation = () => {
     resetQuotationData();
-    navigate("/quotation/");
+    navigate("/quotation");
   };
 
   const handlePrintAction = useReactToPrint({
@@ -53,8 +58,11 @@ function QuaotationTable({ quotations, isLoading }) {
   };
 
   const handleEdit = async (quotation) => {
-    await setQuotationData(quotation);
-    navigate(`quotation/${quotation.id}`);
+    await setQuotationData({
+      ...quotation,
+      updatedAt: getDateFormat(new Date()),
+    });
+    navigate(`/quotation/${quotation.id}`);
   };
 
   const handleDelete = (quotation) => {
@@ -75,13 +83,7 @@ function QuaotationTable({ quotations, isLoading }) {
 
   const changeStatus = async () => {
     try {
-      await quotationApi.updateStatus(selectedQuotation.id, newStatus);
-      // อัปเดตสถานะใน quotations array เพื่อแสดงผลทันทีบน UI
-      const updatedQuotations = quotations.map((quotation) =>
-        quotation.id === selectedQuotation.id
-          ? { ...quotation, status: newStatus }
-          : quotation
-      );
+      await updateQuotationStatus(selectedQuotation.id, newStatus);
       setStatusModalOpen(false);
       toast.success("Status Updated Successfully");
     } catch (error) {
@@ -100,7 +102,7 @@ function QuaotationTable({ quotations, isLoading }) {
         </div>
       </div>
       <div className="mt-3 overflow-auto max-h-[calc(100vh-256px)]">
-        {isLoading && <Loading />}
+        {isQuotationsDataLoading && <Loading />}
         <table className="w-full text-gray-700 border-x border-gray-200 rounded-sm">
           <thead className="sticky top-0">
             <tr>
@@ -114,7 +116,7 @@ function QuaotationTable({ quotations, isLoading }) {
             </tr>
           </thead>
           <tbody>
-            {quotations.map((quotation) => (
+            {filterQuotationsData.map((quotation) => (
               <tr key={quotation.id}>
                 <td>{quotation.id}</td>
                 <td>
@@ -149,8 +151,14 @@ function QuaotationTable({ quotations, isLoading }) {
                 </td>
                 <td className="flex justify-center items-center gap-4 text-2xl">
                   <div
-                    className="w-10 h-10 flex justify-center items-center rounded-full bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer"
-                    onClick={() => handleEdit(quotation)}
+                    className={`w-10 h-10 flex justify-center items-center rounded-full ${
+                      quotation.status === "DRAFTED"
+                        ? "bg-ifcg-gray-high hover:bg-ifcg-gray-low cursor-pointer"
+                        : "bg-ifcg-gray-low opacity-50"
+                    }`}
+                    onClick={() =>
+                      quotation.status === "DRAFTED" && handleEdit(quotation)
+                    }
                   >
                     <CiEdit />
                   </div>

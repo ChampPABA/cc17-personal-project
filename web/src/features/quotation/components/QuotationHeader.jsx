@@ -13,7 +13,7 @@ const QuotationHeader = () => {
             <td className="px-4 py-2 text-gray-700 border-0">
               วันที่จอง / Reservation Date :
               <span className="inline-block border-b border-dashed border-gray-400 w-full">
-                {quotationData.createdAt}
+                {quotationData.updatedAt}
               </span>
             </td>
           </tr>

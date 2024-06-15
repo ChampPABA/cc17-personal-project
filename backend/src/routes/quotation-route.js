@@ -14,6 +14,15 @@ quotationRouter.post(
   quotationController.create
 );
 
-quotationRouter.put("/:id/status", quotationController.updateQuotationStatus);
+quotationRouter.patch("/:id/status", quotationController.updateQuotationStatus);
+
+quotationRouter.patch(
+  "/:id",
+  quotationValidator,
+  upload.single("file"),
+  quotationController.updateQuotation
+);
+
+quotationRouter.get("/:id", quotationController.getQuotationById);
 
 module.exports = quotationRouter;

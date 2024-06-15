@@ -32,9 +32,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/quotation",
+        path: "/quotation/:id",
         element: <QuotationPage />,
       },
+      { path: "/quotation/", element: <QuotationPage /> },
       { path: "/settings", element: <h1>Settings</h1> },
       { path: "/support", element: <h1>Support</h1> },
     ],
@@ -47,10 +48,6 @@ const router = createBrowserRouter([
       </RedirectIfLogged>
     ),
   },
-  // {
-  //   path: "/quotation",
-  //   element: <QuotationPage />,
-  // },
 ]);
 
 export default function Router() {
