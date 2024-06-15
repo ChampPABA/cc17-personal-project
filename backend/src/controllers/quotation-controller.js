@@ -142,4 +142,25 @@ quotationController.deleteQuotationById = async (req, res, next) => {
   }
 };
 
+quotationController.sendEmail = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { email } = req.body;
+    console.log(id, email);
+    const quotation = await quotationService.findQuotationById(Number(id));
+    if (!quotation) {
+      createError({
+        message: "Quotation not found",
+        statusCode: 404,
+      });
+    }
+
+    // function ส่ง mail จาก Service
+    await quotationService.sendEmail(quotation, email);
+    res.status(200).json({ message: "Email Sent Successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = quotationController;

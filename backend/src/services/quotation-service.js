@@ -1,6 +1,7 @@
 const prisma = require("../models/prisma");
 const cloudinary = require("../config/cloudinary");
 const fs = require("fs");
+const nodemailer = require("nodemailer");
 
 const quotationService = {};
 
@@ -118,6 +119,31 @@ quotationService.hardDeleteQuotationById = async (id) => {
     where: {
       id,
     },
+  });
+};
+
+quotationService.sendEmail = async (quotation, email) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Your Quotation",
+    html: `<p>Here is your quotation: <a href="${quotation.pdfLink}">Download PDF</a></p><p></p>`,
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email Send" + info.response);
+    }
   });
 };
 

@@ -29,4 +29,6 @@ quotationRouter.patch("/:id/delete", quotationController.deleteQuotationById);
 
 quotationRouter.delete("/:id/delete", quotationController.deleteQuotationById);
 
+quotationRouter.post("/:id/send-email", quotationController.sendEmail);
+
 module.exports = quotationRouter;
