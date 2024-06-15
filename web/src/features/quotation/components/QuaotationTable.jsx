@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import Modal from "../../../components/Modal";
 import Input from "../../../components/Input";
 import { axiosError } from "../../../utils/axios-error";
+import quotationApi from "../../../apis/quotation";
 
 function QuaotationTable() {
   const navigate = useNavigate();
@@ -26,12 +27,17 @@ function QuaotationTable() {
     resetQuotationData,
     isQuotationsDataLoading,
     updateQuotationStatus,
+    setQuotationsData,
+    setFilterQuotationsData,
   } = useQuotation();
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [selectedQuotation, setSelectedQuotation] = useState(null);
   const [newStatus, setnewStatus] = useState("");
   const [email, setEmail] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [quotationToDelete, setQuotationToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleCreateQuotation = () => {
     resetQuotationData();
@@ -66,7 +72,32 @@ function QuaotationTable() {
   };
 
   const handleDelete = (quotation) => {
-    // รอเขียน Logic
+    setQuotationToDelete(quotation);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (quotationToDelete.status === "DRAFTED") {
+        await quotationApi.hardDeleteQuotation(quotationToDelete.id);
+      } else {
+        await quotationApi.softDeleteQuotation(quotationToDelete.id);
+      }
+      toast.success("Quotation Deleted Successfully");
+      setQuotationsData((prev) =>
+        prev.filter((q) => q.id !== quotationToDelete.id)
+      );
+      setFilterQuotationsData((prev) =>
+        prev.filter((q) => q.id !== quotationToDelete.id)
+      );
+    } catch (error) {
+      axiosError(error);
+    } finally {
+      setIsDeleting(false);
+      setDeleteModalOpen(false);
+      setQuotationToDelete(null);
+    }
   };
 
   const sendEmail = () => {
@@ -248,6 +279,20 @@ function QuaotationTable() {
           <div className="flex justify-end mt-4">
             <Button bg="green" onClick={changeStatus}>
               Confirm
+            </Button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        title="Confirm Delete"
+        open={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+      >
+        <div>
+          <p>Are you sure you want to delete this quotation?</p>
+          <div className="flex justify-end mt-4">
+            <Button bg="red" onClick={confirmDelete} disabled={isDeleting}>
+              {isDeleting ? "Deleting..." : "Confirm"}
             </Button>
           </div>
         </div>

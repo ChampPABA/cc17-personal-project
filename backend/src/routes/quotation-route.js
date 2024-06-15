@@ -25,4 +25,8 @@ quotationRouter.patch(
 
 quotationRouter.get("/:id", quotationController.getQuotationById);
 
+quotationRouter.patch("/:id/delete", quotationController.deleteQuotationById);
+
+quotationRouter.delete("/:id/delete", quotationController.deleteQuotationById);
+
 module.exports = quotationRouter;

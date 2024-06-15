@@ -116,4 +116,30 @@ quotationController.getQuotationById = async (req, res, next) => {
   }
 };
 
+quotationController.deleteQuotationById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const quotation = await quotationService.findQuotationById(Number(id));
+    if (!quotation) {
+      createError({
+        message: "Quotation not found",
+        statusCode: 404,
+      });
+    }
+
+    if (quotation.status === "COMPLETED") {
+      await quotationService.softDeleteQuotationById(
+        Number(id),
+        new Date().toISOString()
+      );
+    } else {
+      await quotationService.hardDeleteQuotationById(Number(id));
+    }
+
+    res.status(200).json({ message: "Quotation Deleted Successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = quotationController;

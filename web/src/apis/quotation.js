@@ -23,4 +23,10 @@ quotationApi.updateQuotation = (id, pdf) =>
 
 quotationApi.getQuotationById = (id) => axios.get(`/quotation/${id}`);
 
+quotationApi.hardDeleteQuotation = (id) =>
+  axios.delete(`/quotation/${id}/delete`);
+
+quotationApi.softDeleteQuotation = (id, deletedAt) =>
+  axios.patch(`/quotation/${id}/delete`, { deletedAt });
+
 export default quotationApi;

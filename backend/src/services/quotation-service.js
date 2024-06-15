@@ -87,4 +87,38 @@ quotationService.findQuotationById = (id) =>
     },
   });
 
+quotationService.softDeleteQuotationById = (id, deletedAt) =>
+  prisma.quotation.update({
+    data: {
+      deletedAt,
+    },
+    where: {
+      id,
+    },
+  });
+
+quotationService.hardDeleteQuotationById = async (id) => {
+  // ดึงข้อมูลเก่า
+  const existingQuotation = await prisma.quotation.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  // ลบไฟล์เก่าจาก Cloudinary
+  const oldFilePublicId = existingQuotation.pdfLink
+    .split("/")
+    .pop()
+    .split(".")[0];
+  await cloudinary.uploader.destroy(`quotations/${oldFilePublicId}`, {
+    resource_type: "raw",
+  });
+
+  return prisma.quotation.delete({
+    where: {
+      id,
+    },
+  });
+};
+
 module.exports = quotationService;
