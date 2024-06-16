@@ -36,6 +36,7 @@ export default function UserContextProvider({ children }) {
     console.log(resGetAuthUser.data);
     setAuthUser(resGetAuthUser.data.user);
   };
+
   const logout = () => {
     removeAccessToken();
     setAuthUser(null);

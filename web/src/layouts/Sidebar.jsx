@@ -20,6 +20,18 @@ export default function Sidebar() {
     toast.success("Logout Successfully");
   };
 
+  const userRoles = authUser?.userRoles || [];
+
+  const filteredSidebarLinks = SIDEBAR_LINKS.filter((el) => {
+    if (el.label === "Admin" && userRoles.includes("ADMIN")) {
+      return true;
+    }
+    if (el.label === "User" && userRoles.includes("USER")) {
+      return true;
+    }
+    return false;
+  });
+
   return (
     <aside className="flex flex-col w-80 p-3 bg-ifcg-red-high text-ifcg-white">
       <div className="flex items-center gap-2 px-1 py-4">
@@ -34,7 +46,7 @@ export default function Sidebar() {
         <small className="lowercase">{authUser?.userRoles.join(", ")}</small>
       </div>
       <div className="flex-1 py-4 flex flex-col gap-0.5 border-t border-ifcg-gray-low">
-        {SIDEBAR_LINKS.map((el) => (
+        {filteredSidebarLinks.map((el) => (
           <SidebarItem
             key={el.key}
             Icon={el.icon}

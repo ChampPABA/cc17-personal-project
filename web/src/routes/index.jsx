@@ -4,7 +4,6 @@ import ProtectedRoute from "../features/authentication/components/ProtectedRoute
 import RedirectIfLogged from "../features/authentication/components/RedirectIfLogged";
 import QuotationManagement from "../pages/QuotationManagement";
 import QuotationPage from "../pages/QuotationPage";
-import Header from "../layouts/Header";
 
 const LoginPage = lazy(() => import("../pages/LoginPage"));
 const HomePage = lazy(() => import("../pages/HomePage"));

@@ -17,6 +17,7 @@ import Modal from "../../../components/Modal";
 import Input from "../../../components/Input";
 import { axiosError } from "../../../utils/axios-error";
 import quotationApi from "../../../apis/quotation";
+import Pagination from "../../../components/Pagination";
 
 function QuaotationTable() {
   const navigate = useNavigate();
@@ -31,6 +32,9 @@ function QuaotationTable() {
     setFilterQuotationsData,
     setIsEdit,
     setIsCreate,
+    currentPage,
+    itemsPerPage,
+    setCurrentPage,
   } = useQuotation();
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
@@ -139,6 +143,16 @@ function QuaotationTable() {
     }
   };
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filterQuotationsData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalItems = filterQuotationsData.length;
+
+  const totalPages = Math.ceil(filterQuotationsData.length / itemsPerPage);
+
   return (
     <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gay-200 flex1">
       <div className="flex justify-between items-center">
@@ -164,7 +178,7 @@ function QuaotationTable() {
             </tr>
           </thead>
           <tbody>
-            {filterQuotationsData.map((quotation) => (
+            {currentItems.map((quotation) => (
               <tr key={quotation.id}>
                 <td>{quotation.id}</td>
                 <td>
@@ -260,6 +274,13 @@ function QuaotationTable() {
           </tbody>
         </table>
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        itemsPerPage={itemsPerPage}
+        totalItems={totalItems}
+      />
       <div style={{ display: "none" }}>
         <QuotationTemplate ref={componentRef} />
       </div>

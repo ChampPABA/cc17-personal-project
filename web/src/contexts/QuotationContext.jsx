@@ -62,6 +62,9 @@ export default function QuotationContextProvider({ children }) {
   const [isEdit, setIsEdit] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   const { id } = useParams();
 
   const fetchQuotations = async () => {
@@ -139,6 +142,10 @@ export default function QuotationContextProvider({ children }) {
     setIsEdit,
     isCreate,
     setIsCreate,
+    currentPage,
+    setCurrentPage,
+    itemsPerPage,
+    setItemsPerPage,
   };
   return (
     <QuotationContext.Provider value={context}>
