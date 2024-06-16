@@ -29,6 +29,8 @@ function QuaotationTable() {
     updateQuotationStatus,
     setQuotationsData,
     setFilterQuotationsData,
+    setIsEdit,
+    setIsCreate,
   } = useQuotation();
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
@@ -38,8 +40,11 @@ function QuaotationTable() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [quotationToDelete, setQuotationToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleCreateQuotation = () => {
+  const handleCreateQuotation = async () => {
+    await setIsCreate(true);
+    setIsEdit(false);
     resetQuotationData();
     navigate("/quotation");
   };
@@ -49,12 +54,15 @@ function QuaotationTable() {
   });
 
   const handlePrint = async (quotation) => {
+    setIsEdit(false);
+    setIsCreate(false);
     await setQuotationData(quotation);
     handlePrintAction();
   };
 
   const handleSendEmail = (quotation) => {
     setSelectedQuotation(quotation);
+    setEmail("");
     setEmailModalOpen(true);
   };
 
@@ -64,6 +72,8 @@ function QuaotationTable() {
   };
 
   const handleEdit = async (quotation) => {
+    setIsEdit(true);
+    setIsCreate(false);
     await setQuotationData({
       ...quotation,
       updatedAt: getDateFormat(new Date()),
@@ -100,10 +110,17 @@ function QuaotationTable() {
     }
   };
 
-  const sendEmail = () => {
-    // รอเขียน Logic ส่ง email ด้วย selectedQuotation.pdfLink แล้วก็ email
-    setEmailModalOpen(false);
-    toast.success("Email Sent Succesfully");
+  const sendEmail = async () => {
+    setIsLoading(true);
+    try {
+      await quotationApi.sendEmail(selectedQuotation.id, email);
+      toast.success("Email Sent Succesfully");
+      setEmailModalOpen(false);
+    } catch (error) {
+      axiosError(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleStatusChange = (quotation, status) => {
@@ -260,8 +277,8 @@ function QuaotationTable() {
             onChange={(event) => setEmail(event.target.value)}
           />
           <div className="flex justify-end mt-4">
-            <Button bg="green" onClick={sendEmail}>
-              Send
+            <Button bg="green" onClick={sendEmail} disabled={isLoading}>
+              {isLoading ? "Sending..." : "Send"}
             </Button>
           </div>
         </div>

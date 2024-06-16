@@ -59,6 +59,9 @@ export default function QuotationContextProvider({ children }) {
 
   const [isQuotationDataLoading, setIsQuotationDataLoading] = useState(true);
 
+  const [isEdit, setIsEdit] = useState(false);
+  const [isCreate, setIsCreate] = useState(false);
+
   const { id } = useParams();
 
   const fetchQuotations = async () => {
@@ -67,16 +70,11 @@ export default function QuotationContextProvider({ children }) {
       setQuotationsData(res.data.quotations);
       setFilterQuotationsData(res.data.quotations);
     } catch (error) {
-      console.log(error);
       axiosError(error);
     } finally {
       setIsQuotationsDataLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchQuotations();
-  }, []);
 
   useEffect(() => {
     const fetchQuotation = async () => {
@@ -137,6 +135,10 @@ export default function QuotationContextProvider({ children }) {
     setFilterQuotationsData,
     fetchQuotations,
     setIsQuotationDataLoading,
+    isEdit,
+    setIsEdit,
+    isCreate,
+    setIsCreate,
   };
   return (
     <QuotationContext.Provider value={context}>

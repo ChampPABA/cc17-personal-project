@@ -6,7 +6,7 @@ import {
   HiOutlineSearch,
 } from "react-icons/hi";
 
-export default function Header() {
+export default function Header({ onSearch }) {
   return (
     <header className="grid grid-cols-2 bg-white shadow px-4 items-center mb-4">
       <div className="flex items-center">
@@ -14,7 +14,7 @@ export default function Header() {
           <HiOutlineSearch fontSize={20} className="text-ifcg-black-low" />
         </div>
         <div>
-          <Input placeholder="Search..." />
+          <Input placeholder="Search..." onChange={onSearch} />
         </div>
       </div>
 

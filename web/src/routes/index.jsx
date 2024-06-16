@@ -26,7 +26,6 @@ const router = createBrowserRouter([
         path: "/quotation_management",
         element: (
           <>
-            <Header />
             <QuotationManagement />
           </>
         ),

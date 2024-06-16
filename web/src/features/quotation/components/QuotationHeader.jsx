@@ -1,7 +1,8 @@
 import useQuotation from "../../../hooks/useQuotation";
+import { getDateFormat } from "../../../utils/date-format";
 
 const QuotationHeader = () => {
-  const { quotationData } = useQuotation();
+  const { quotationData, isEdit, isCreate } = useQuotation();
 
   return (
     <div className="p-4">
@@ -13,7 +14,11 @@ const QuotationHeader = () => {
             <td className="px-4 py-2 text-gray-700 border-0">
               วันที่จอง / Reservation Date :
               <span className="inline-block border-b border-dashed border-gray-400 w-full">
-                {quotationData.updatedAt}
+                {isEdit
+                  ? quotationData.updatedAt
+                  : isCreate
+                  ? getDateFormat(new Date())
+                  : getDateFormat(quotationData.createdAt)}
               </span>
             </td>
           </tr>

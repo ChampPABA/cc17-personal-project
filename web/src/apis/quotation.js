@@ -29,4 +29,7 @@ quotationApi.hardDeleteQuotation = (id) =>
 quotationApi.softDeleteQuotation = (id, deletedAt) =>
   axios.patch(`/quotation/${id}/delete`, { deletedAt });
 
+quotationApi.sendEmail = (quotationId, email) =>
+  axios.post(`/quotation/${quotationId}/send-email`, { email });
+
 export default quotationApi;
