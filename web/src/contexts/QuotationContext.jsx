@@ -65,6 +65,11 @@ export default function QuotationContextProvider({ children }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  const [sortConfig, setSortConfig] = useState({
+    key: "id",
+    direction: "decending",
+  });
+
   const { id } = useParams();
 
   const fetchQuotations = async () => {
@@ -146,6 +151,8 @@ export default function QuotationContextProvider({ children }) {
     setCurrentPage,
     itemsPerPage,
     setItemsPerPage,
+    sortConfig,
+    setSortConfig,
   };
   return (
     <QuotationContext.Provider value={context}>

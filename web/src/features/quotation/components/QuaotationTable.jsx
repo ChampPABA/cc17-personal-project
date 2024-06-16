@@ -35,6 +35,8 @@ function QuaotationTable() {
     currentPage,
     itemsPerPage,
     setCurrentPage,
+    sortConfig,
+    setSortConfig,
   } = useQuotation();
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
@@ -153,6 +155,23 @@ function QuaotationTable() {
 
   const totalPages = Math.ceil(filterQuotationsData.length / itemsPerPage);
 
+  const handleSort = (key) => {
+    let direction = "descending";
+    if (sortConfig.key === key && sortConfig.direction === "descending") {
+      direction = "ascending";
+    }
+    setSortConfig({ key, direction });
+    setFilterQuotationsData((prev) => {
+      const sortedData = [...prev];
+      sortedData.sort((a, b) => {
+        if (a[key] < b[key]) return direction === "descending" ? -1 : 1;
+        if (a[key] > b[key]) return direction === "descending" ? 1 : -1;
+        return 0;
+      });
+      return sortedData;
+    });
+  };
+
   return (
     <div className="bg-white px-4 pt-3 pb-4 rounded-sm border border-gay-200 flex1">
       <div className="flex justify-between items-center">
@@ -168,12 +187,51 @@ function QuaotationTable() {
         <table className="w-full text-gray-700 border-x border-gray-200 rounded-sm">
           <thead className="sticky top-0">
             <tr>
-              <td>Id</td>
-              <td>Customer</td>
-              <td>Date</td>
-              <td>Project Name</td>
-              <td>Unit Number</td>
-              <td>Status</td>
+              <td className="cursor-pointer" onClick={() => handleSort("id")}>
+                Id{" "}
+                {sortConfig.key === "id" &&
+                  (sortConfig.direction === "ascending" ? "↑" : "↓")}
+              </td>
+              <td
+                className="cursor-pointer"
+                onClick={() => handleSort("customerFirstName")}
+              >
+                Customer{" "}
+                {sortConfig.key === "customerFirstName" &&
+                  (sortConfig.direction === "ascending" ? "↑" : "↓")}
+              </td>
+              <td
+                className="cursor-pointer"
+                onClick={() => handleSort("createdAt")}
+              >
+                Date{" "}
+                {sortConfig.key === "createdAt" &&
+                  (sortConfig.direction === "ascending" ? "↑" : "↓")}
+              </td>
+              <td
+                className="cursor-pointer"
+                onClick={() => handleSort("projectName")}
+              >
+                Project Name{" "}
+                {sortConfig.key === "projectName" &&
+                  (sortConfig.direction === "ascending" ? "↑" : "↓")}
+              </td>
+              <td
+                className="cursor-pointer"
+                onClick={() => handleSort("roomNo")}
+              >
+                Unit Number{" "}
+                {sortConfig.key === "roomNo" &&
+                  (sortConfig.direction === "ascending" ? "↑" : "↓")}
+              </td>
+              <td
+                className="cursor-pointer"
+                onClick={() => handleSort("status")}
+              >
+                Status{" "}
+                {sortConfig.key === "status" &&
+                  (sortConfig.direction === "ascending" ? "↑" : "↓")}
+              </td>
               <td className="text-center">Action</td>
             </tr>
           </thead>
