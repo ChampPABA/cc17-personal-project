@@ -4,6 +4,7 @@ const jwtService = require("../services/jwt-service");
 const roleService = require("../services/role-service");
 const userService = require("../services/user-service");
 const createError = require("../utils/create-error");
+const otpService = require("../services/otp-service");
 
 const userController = {};
 
@@ -65,6 +66,50 @@ userController.login = async (req, res, next) => {
 
 userController.getMe = async (req, res, next) => {
   res.status(200).json({ user: req.user });
+};
+
+userController.requestOTP = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      createError({
+        message: "Email is required",
+        statusCode: 400,
+      });
+    }
+
+    const validUser = await userService.findUserByEmail(email);
+    if (!validUser) {
+      createError({
+        message: "Not Found",
+        statusCode: 404,
+      });
+    }
+
+    const result = await otpService.createAndSendOTP(email);
+
+    res.status(200).json(result);
+
+    // res.status(200).json({ message: "OTP sent successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+userController.verifyOTP = async (req, res, next) => {
+  try {
+    const { email, otp, refCode } = req.body;
+    if (!email || !otp || !refCode) {
+      createError({
+        message: "Email, OTP, and Reference Code are required",
+      });
+    }
+
+    await otpService.verifyOTP(email, otp, refCode);
+    res.status(200).json({ message: "OTP verified successfully" });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = userController;

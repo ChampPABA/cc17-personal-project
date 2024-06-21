@@ -10,8 +10,13 @@ const authenticate = require("../middlewares/authenticate");
 const userRouter = express.Router();
 
 userRouter.post("/register", registerValidator, userController.register);
+
 userRouter.post("/login", loginValidator, userController.login);
 
 userRouter.get("/me", authenticate, userController.getMe);
+
+userRouter.post("/request-otp", userController.requestOTP);
+
+userRouter.post("/verify-otp", userController.verifyOTP);
 
 module.exports = userRouter;

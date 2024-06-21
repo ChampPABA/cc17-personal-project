@@ -18,6 +18,7 @@ model User {
   updatedAt  DateTime?   @updatedAt @db.Timestamp(0)
   userRoles  UserRole[]
   quotations Quotation[]
+  OTP        OTP[]
 
   @@map("users")
 }
@@ -79,4 +80,16 @@ model Quotation {
 enum StatusName {
   DRAFTED
   COMPLETED
+}
+
+model OTP {
+  id        Int      @id @default(autoincrement())
+  email     String
+  otp       String
+  refCode   String
+  expiresAt DateTime
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  user      User     @relation(fields: [email], references: [email])
+
+  @@map("otps")
 }
