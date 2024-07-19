@@ -18,7 +18,7 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { path: "/", element: <HomePage /> },
+      { path: "/", element: <QuotationManagement /> },
       { path: "/profile", element: <h1>Profile</h1> },
       { path: "/user_management", element: <h1>User Management</h1> },
       {

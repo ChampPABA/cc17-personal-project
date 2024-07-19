@@ -27,6 +27,12 @@ userService.findUserById = (userId) =>
     },
   });
 
+userService.updatePasswordByEmail = (email, password) =>
+  prisma.user.update({
+    where: { email },
+    data: { password },
+  });
+
 // เขียน Function รอไว้ก่อน ทำ Front-end ก่อนค่อยมาทำ
 userService.activateUser = (userId) =>
   prisma.user.update({

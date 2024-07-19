@@ -19,4 +19,6 @@ userRouter.post("/request-otp", userController.requestOTP);
 
 userRouter.post("/verify-otp", userController.verifyOTP);
 
+userRouter.post("/change-password", userController.changePassword);
+
 module.exports = userRouter;

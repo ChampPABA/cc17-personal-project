@@ -77,14 +77,6 @@ export default function LoginForm() {
             >
               Password
             </label>
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-semibold text-ifcg-gray-high hover:text-gray-300"
-              >
-                Forgot password?
-              </a>
-            </div>
           </div>
           <div className="mt-2">
             <Input

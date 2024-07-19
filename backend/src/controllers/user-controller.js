@@ -112,4 +112,18 @@ userController.verifyOTP = async (req, res, next) => {
   }
 };
 
+userController.changePassword = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const hashedPassword = await hashService.hash(password);
+
+    await userService.updatePasswordByEmail(email, hashedPassword);
+    await otpService.deleteOTP(email);
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = userController;

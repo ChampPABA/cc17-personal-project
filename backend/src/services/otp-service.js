@@ -76,9 +76,12 @@ otpService.verifyOTP = async (email, otp, refCode) => {
     });
   }
 
-  await prisma.oTP.deleteMany({ where: { email } }); // ลบ OTP หลังจากใช้เสร็จแล้ว
+  // await prisma.oTP.deleteMany({ where: { email } }); // ลบ OTP หลังจากใช้เสร็จแล้ว
 
   return true;
 };
+
+otpService.deleteOTP = async (email) =>
+  await prisma.oTP.deleteMany({ where: { email } });
 
 module.exports = otpService;

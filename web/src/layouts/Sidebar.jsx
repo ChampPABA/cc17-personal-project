@@ -43,7 +43,7 @@ export default function Sidebar() {
         <p className="font-semibold">
           {authUser?.firstName} {authUser?.lastName}
         </p>
-        <small className="lowercase">{authUser?.userRoles.join(", ")}</small>
+        {/* <small className="lowercase">{authUser?.userRoles.join(", ")}</small> */}
       </div>
       <div className="flex-1 py-4 flex flex-col gap-0.5 border-t border-ifcg-gray-low">
         {filteredSidebarLinks.map((el) => (

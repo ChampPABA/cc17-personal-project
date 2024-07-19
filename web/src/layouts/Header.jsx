@@ -19,13 +19,13 @@ export default function Header({ onSearch }) {
       </div>
 
       <div className="justify-self-end h-[48px] flex items-center gap-2">
-        <div className="flex justify-center items-center w-10 h-10 rounded-full hover:bg-ifcg-gray-low cursor-pointer">
+        {/* <div className="flex justify-center items-center w-10 h-10 rounded-full hover:bg-ifcg-gray-low cursor-pointer">
           <HiOutlineChatAlt fontSize={24} />
         </div>
         <div className="flex justify-center items-center w-10 h-10 rounded-full hover:bg-ifcg-gray-low cursor-pointer">
           <HiOutlineBell fontSize={24} />
         </div>
-        <Dropdown />
+        <Dropdown /> */}
       </div>
     </header>
   );
