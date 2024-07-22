@@ -36,7 +36,10 @@ export default function Sidebar() {
     <aside className="flex flex-col w-80 p-3 bg-ifcg-red-high text-ifcg-white">
       <div className="flex items-center gap-2 px-1 py-4">
         <div className=" bg-ifcg-gray-low rounded-lg">
-          <img src="../../assets/ifcg_logo.png" alt="company logo" />
+          <img
+            src="https://connect.infoquest.co.th/images/2023/2023-07-05/A079B2D5977B02FF18F1067A2DF9063F.png"
+            alt="company logo"
+          />
         </div>
       </div>
       <div className="py-4 border-t border-ifcg-gray-low">

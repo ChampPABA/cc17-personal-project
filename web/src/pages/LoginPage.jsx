@@ -37,7 +37,7 @@ function LoginPage() {
             <div>
               <img
                 className="mx-auto h-10 w-auto"
-                src="../../assets/ifcg_logo.png"
+                src="https://connect.infoquest.co.th/images/2023/2023-07-05/A079B2D5977B02FF18F1067A2DF9063F.png"
                 alt="Company Logo"
               />
             </div>
